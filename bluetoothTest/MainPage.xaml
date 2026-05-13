@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="bluetoothTest.MainPage">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="30,0"
+            Spacing="25">
+            <!--
+            <Image Source="me.jpg" 
+                   HeightRequest="185"
+                   Aspect="AspectFit"
+                   SemanticProperties.Description="Wave lenght calculation"/>
+            -->
+
+            
+            <!--
+            <Label Text="motorcycle chain oiler v.2" Style="{StaticResource Headline}" SemanticProperties.HeadingLevel="Level1" />
+            -->
+
+
+
+            <VerticalStackLayout Padding="20" Spacing="12">
+                <Grid ColumnDefinitions="*,*" Padding="10" ColumnSpacing="10">
+                    <Button x:Name="scanButton" Text="Scan BT" Clicked="ScanClicked" Grid.Column="0" />
+                    <Button x:Name="connectButton" Text="Connect" Clicked="ConnectClicked" Grid.Column="1" />
+                </Grid>
+                <Button x:Name="settingsButton" Text="Settings" Clicked="settingsButton_Clicked" IsEnabled="False"/>
+                <Button x:Name="manualButton" Text="Manual" Clicked="manualButton_Clicked" IsEnabled="False"/>
+
+
+          
+            <Entry x:Name="messageEntry" Placeholder="Message to ESP32" IsVisible="False"/>
+            <Button x:Name="sendButton" Text="Send" Clicked="SendClicked" IsVisible="False"/>
+
+            <HorizontalStackLayout Padding="20" Spacing="12">
+                    <BoxView x:Name="LedBTalive" WidthRequest="20" HeightRequest="20" CornerRadius="10" Color="Red" BackgroundColor="Transparent" />
+                    <Label Text="BT alive" />
+                </HorizontalStackLayout>
+                
+                <Label x:Name="receivedLabel" Text="No data yet" />
+
+            </VerticalStackLayout>
+
+
+
+
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

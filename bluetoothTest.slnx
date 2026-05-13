@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="bluetoothTest/motorcycleChainOilerV2.csproj">
+    <Deploy Solution="Debug|*" />
+  </Project>
+</Solution>

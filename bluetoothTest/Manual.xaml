@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="bluetoothTest.Manual"
+             Title="manual mode">
+
+    <VerticalStackLayout Padding="20" Spacing="12">
+        <Button x:Name="manualDbutton" Text="manual dosis" Clicked="manualButton_Clicked" IsEnabled="False"/>
+        <Button x:Name="jogButton" Text="manual pump" Pressed="jogButton_Pressed" Released="jogButton_Released"/>
+
+
+
+        <HorizontalStackLayout Padding="20" Spacing="12">
+            <BoxView x:Name="LedBTalive" WidthRequest="20" HeightRequest="20" CornerRadius="10" Color="Red" BackgroundColor="Transparent" />
+            <Label Text="BT alive" />
+        </HorizontalStackLayout>
+        <HorizontalStackLayout Padding="20" Spacing="12">
+            <Button x:Name="V12button" Text="12.0V calibration" Clicked="V12button_Clicked" />
+            <Button x:Name="V7Button" Text="7.0V calibration" Clicked="V7Button_Clicked" />
+        </HorizontalStackLayout>
+        <Button x:Name="checkVbutton" Text="check voltage" Clicked="checkVbutton_Clicked"/>
+
+        <Label x:Name="receivedLabel" Text="No data yet" />
+    </VerticalStackLayout>
+</ContentPage>

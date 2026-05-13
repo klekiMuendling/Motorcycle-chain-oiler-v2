@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="bluetoothTest.Settings"
+             Title="Settings">
+    <VerticalStackLayout>
+        <Label 
+            Text="settings"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+        <Grid ColumnDefinitions="*,*,*" Padding="10" ColumnSpacing="10">
+            <Label x:Name="title1" Text="actual values" Grid.Row="0" Grid.Column="0" />
+            <Label x:Name="title2" Text="value to set" Grid.Row="0" Grid.Column="1" />
+            <Label x:Name="title3" Text="set value" Grid.Row="0" Grid.Column="2" />
+        </Grid>
+        <Grid ColumnDefinitions="*,*,*" Padding="10" ColumnSpacing="10">
+                <Label x:Name="pwValue" Text="actual PWM" Grid.Row="0" Grid.Column="0" />
+                <Entry x:Name="newPWvalue" Text="10" Placeholder="new PWM" Grid.Row="0" Grid.Column="1"/>
+                <Button x:Name="sendPW" Text="set PWM" Grid.Row="0" Grid.Column="2" Clicked="setPWMclicked"/>
+            </Grid>
+        <Grid ColumnDefinitions="*,*,*" Padding="10" ColumnSpacing="10">
+            <Label x:Name="tdValue" Text="actual TD" Grid.Row="0" Grid.Column="0" />
+            <Entry x:Name="newTDvalue" Text="10" Placeholder="new TD" Grid.Row="0" Grid.Column="1"/>
+            <Button x:Name="sendTD" Text="set TD" Grid.Row="0" Grid.Column="2" Clicked="setTDclicked"/>
+        </Grid>
+        <Grid ColumnDefinitions="*,*,*" Padding="10" ColumnSpacing="10">
+            <Label x:Name="tpValue" Text="actual TP" Grid.Row="0" Grid.Column="0" />
+            <Entry x:Name="newTPvalue" Text="10" Placeholder="new TP" Grid.Row="0" Grid.Column="1"/>
+            <Button x:Name="sendTP" Text="set TP" Grid.Row="0" Grid.Column="2" Clicked="setTPclicked"/>
+        </Grid>
+        <Grid ColumnDefinitions="*,*,*" Padding="10" ColumnSpacing="10">
+            <Label x:Name="toValue" Text="actual TO" Grid.Row="0" Grid.Column="0" />
+            <Entry x:Name="newTOvalue" Text="10" Placeholder="new TO" Grid.Row="0" Grid.Column="1"/>
+            <Button x:Name="sendTO" Text="set TO" Grid.Row="0" Grid.Column="2" Clicked="setTOclicked"/>
+        </Grid>
+        <Grid ColumnDefinitions="*,*,*" Padding="10" ColumnSpacing="10">
+            <Label x:Name="thValue" Text="actual TH" Grid.Row="0" Grid.Column="0" />
+            <Entry x:Name="newTHvalue" Text="10" Placeholder="new TH" Grid.Row="0" Grid.Column="1"/>
+            <Button x:Name="sendTH" Text="set TH" Grid.Row="0" Grid.Column="2" Clicked="setTHclicked"/>
+        </Grid>
+
+
+        <HorizontalStackLayout Padding="20" Spacing="12">
+            <BoxView x:Name="LedBTalive" WidthRequest="20" HeightRequest="20" CornerRadius="10" Color="Red" BackgroundColor="Transparent" />
+            <Label Text="BT alive" />
+        </HorizontalStackLayout>
+
+
+        <HorizontalStackLayout Padding="20" Spacing="12">
+            <Label x:Name="receivedLabel" Text="No data yet" />
+            <Button x:Name="helpBtn" Text="help" Clicked="helpBtn_Clicked"/>
+
+        </HorizontalStackLayout>
+
+
+    </VerticalStackLayout>
+</ContentPage>
