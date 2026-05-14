@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Archive>
+  <Name>Motorcycle chain oiler v.2</Name>
+  <PackageName>com.kleki.motoChainOilerV2</PackageName>
+  <PackageVersionCode>1</PackageVersionCode>
+  <PackageVersionName>2</PackageVersionName>
+  <PackageFormat>apk</PackageFormat>
+  <CreationDate>639143038474939387</CreationDate>
+  <SolutionName>bluetoothTest</SolutionName>
+  <SolutionPath>P:\motorcycleChainOilerV2\bluetoothTest\bluetoothTest.slnx</SolutionPath>
+  <Status></Status>
+  <MinSdkVersion>21</MinSdkVersion>
+  <Configuration>
+    <DebugMode>false</DebugMode>
+  </Configuration>
+  <Comment />
+  <LastUsedKeystore>C:\Users\P.Klekot\AppData\Local\Xamarin\Mono for Android\Keystore\kleki\kleki.keystore</LastUsedKeystore>
+  <TimeStampingAuthority />
+  <LastInsightsUploadDate>0</LastInsightsUploadDate>
+</Archive>
