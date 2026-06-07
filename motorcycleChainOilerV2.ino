@@ -55,7 +55,7 @@ int pwmResolution = PWM_RESOLUTION;
 #define TH_MAX 100
 #define TH_MIN 0
 #define VL_MAX 40000000
-#define VL_MIN 999
+#define VL_MIN 99
 int pumpRunTime = 0, pumpWaitTime = 0;
 bool pumpRunning = false, stratupDelay = true;
 int startupWait = 0;
@@ -64,8 +64,11 @@ int pw = 0,  //PWM-value for pump, 0..100% power
   td = 0,    //turn-on delay after power cycle in seconds
   tp = 10,   //time between oiling doses in seconds
   to = 0,    //dose time (pump working time) in tenths of second
-  th = 30;   //hand oiling time in tenths of second
+  th = 30,   //hand oiling time in tenths of second
+  vl = 99;  //oil capacity power*time*1000
+int lvl = 0;  //oil level 0-100% - temporary variable for debugging
 
+unsigned int pumpStartCounter = 0;   //counter to approximate pump start counts for sparing the eeprom save events
 unsigned long pumpedTimePower = 0;   //second tenths pumped multiplied by pwm-factor
 unsigned long volumeTimePower = 0;   //volumetric capacity of oil container to get percentage
 #define LEVEL_INTERVAL 7500          //time between two level messages
@@ -76,7 +79,12 @@ void pumpStart() {
   pumpRunning = true;
   digitalWrite(LED, LOW);
   pumpedTimePower += pw * to;
-
+  pumpStartCounter++;
+  //saving the consumption counter into eeprom only every 10 pump cycles with assumption, that there will be next 5 pumps
+  //it should be statisticaly unsignifficant but it should spare 90 % of eeprom write cycles
+  if (pumpStartCounter % 10 == 5) {
+    prefs.putULong("pumpedTimePower", (pumpedTimePower + (5 * (pw * to))));
+  }
 }
 void pumpStop() {
   ledcWrite(PUMP, (0));
@@ -148,12 +156,13 @@ void setup() {
   tp = prefs.getInt("prefTp", 60);
   to = prefs.getInt("prefTo", 20);
   th = prefs.getInt("prefTh", 30);
+  vl = prefs.getULong("prefVl", 99);
   a_pump = prefs.getFloat("a_pump", 0.0);
   b_pump = prefs.getFloat("b_pump", 0.0);
   a_supply = prefs.getFloat("a_supply", 0.0);
   b_supply = prefs.getFloat("b_supply", 0.0);
   pumpedTimePower = prefs.getULong("pumpedTimePower", 0);
-  volumeTimePower  = prefs.getULong("volumeTimePower", 100);
+  vl  = prefs.getULong("volumeTimePower", 100);
 
   pinMode(LED, OUTPUT);
   digitalWrite(LED, HIGH);
@@ -173,6 +182,7 @@ void setup() {
   Serial.println("TP: " + String(tp));
   Serial.println("TO: " + String(to));
   Serial.println("TH: " + String(th));
+  Serial.println("VL: " + String(vl));
   //if ((a_pump != 0.0) && (b_pump != 0.0)) {
   //  vPump = ((float)analogRead(PUMP_VOLTAGE) * a_pump) + b_pump;
   //}
@@ -217,7 +227,7 @@ void setup() {
 
 ////////////////////////////////LOOP
 void loop() {
-  static unsigned long lastNotify = 0;
+  static unsigned long lastNotify = 0, lastNotifyLvl = 0;
   static unsigned long lastLevel = 0;
 
   if (deviceConnected && millis() - lastNotify > PING_INTERVAL) {
@@ -229,10 +239,24 @@ void loop() {
 
     Serial.println(msg);
   }
-  if (deviceConnected && millis() - lastNotify > LEVEL_INTERVAL) {
-    lastNotify = millis();
+  if (deviceConnected && millis() - lastNotifyLvl > LEVEL_INTERVAL) {
+    lastNotifyLvl = millis();
 
-    String msg = "Level: " + String( (volumeTimePower - pumpedTimePower) * 100 / volumeTimePower ) + "%";
+    //String msg = "Level: " + String( (volumeTimePower - pumpedTimePower) * 100 / volumeTimePower ) + "%";
+    //////////////////////////////////////////////////////////////////////////////////// change this to volumetric counter !!!!!!!!!!!!!!!!!!!! ////////////////////////////////////////////
+    /*lvl = lvl + random(-5, 7);
+    if (lvl < 0){
+      lvl = 0;
+    }*/
+    
+    lvl = ((vl - pumpedTimePower) * 100 / vl );
+    Serial.print(vl);
+    Serial.print(" - ");
+    Serial.println(pumpedTimePower);
+    Serial.print(" : ");
+    Serial.println(pumpStartCounter);
+    //////////////////////////////////////////////////////////////////////////////////// change this to volumetric counter !!!!!!!!!!!!!!!!!!!! ////////////////////////////////////////////
+    String msg = "Level: " + String(lvl) + "%";
     txCharacteristic->setValue(msg.c_str());
     txCharacteristic->notify();
 
@@ -389,8 +413,9 @@ void loop() {
       if (write == "=") {
         if ((value <= VL_MAX) && (value >= VL_MIN) && value != 0) {
           //set volumetric capacity
-          prefs.putULong("volumeTimePower", value);
-          String msg = command.substring(0, 2) + ": " + String(th);
+          prefs.putULong("prefVl", value);
+          vl = value;
+          String msg = command.substring(0, 2) + ": " + String(vl);
           Serial.println(msg);
           txCharacteristic->setValue(msg.c_str());
           txCharacteristic->notify();
@@ -402,6 +427,13 @@ void loop() {
           txCharacteristic->setValue(msg.c_str());
           txCharacteristic->notify();
         }
+      }
+      else {
+        vl = prefs.getULong("prefVl");
+        String msg = command.substring(0, 2) + ": " + String(vl);
+        Serial.println(msg);
+        txCharacteristic->setValue(msg.c_str());
+        txCharacteristic->notify();
       }
     } else if ((command == "V1")&&(write == "2")) {
         //x12_pump = (float)analogRead(PUMP_VOLTAGE);
@@ -445,7 +477,7 @@ void loop() {
           Serial.print(", b=");
           Serial.println(b_supply);
         }
-      } else if ((command == "RE")&&(write == "S")) {
+      } else if ((command == "RE")) {
         prefs.putULong("pumpedTimePower", 0);
         pumpedTimePower = 0;
         
